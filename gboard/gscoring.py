@@ -111,7 +111,7 @@ def _collect_region(start_pos: GPoint, board: GBoard, visited: bool = None):
 
 
 def compute_game_result(game_state, komi=7.5):
-    territory = evaluate_territory(game_state.board)
+    territory = evaluate_territory(game_state.gboard)
     return GameResult(
         territory.num_black_gterritory + territory.num_black_gstones,
         territory.num_white_gterritory + territory.num_white_gstones,

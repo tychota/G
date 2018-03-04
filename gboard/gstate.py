@@ -101,7 +101,7 @@ class GState:
 
         return moves
 
-    def winner(self):
+    def winner(self) -> Optional[GPlayer]:
         if not self.is_over():
             return None
         if self.last_gmove.is_resign:
