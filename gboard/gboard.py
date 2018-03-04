@@ -1,20 +1,23 @@
+from typing import List, Dict
 from gboard.gstring import GString
+from gtypes.gplayer import GPlayer
+from gtypes.gpoint import GPoint
 
 
 class GBoard:
     def __init__(self, num_rows, num_cols):
         self.num_rows = num_rows
         self.num_cols = num_cols
-        self._grid = {}
+        self._grid: Dict[GPoint, GString] = {}
 
-    def place_stone(self, gplayer, gpoint):
+    def place_stone(self, gplayer: GPlayer, gpoint: GPoint):
         # safety nets
         assert self.is_on_grid(gpoint)   # prevents playing outside of the board: illegal move
         assert self._grid.get(gpoint) is None  # prevents playing on existing stone: illegal move
 
-        adjacent_same_color = []
-        adjacent_opposite_color = []
-        liberties = []
+        adjacent_same_color: List[GString] = []
+        adjacent_opposite_color: List[GString] = []
+        liberties: List[GPoint] = []
 
         for neighbour in gpoint.neighbours():
             # Do not explore the outside world: stay on board !
@@ -50,7 +53,7 @@ class GBoard:
             if other_color_gstring.num_liberties == 0:
                 self._remove_string(other_color_gstring)
 
-    def _remove_string(self, gstring):
+    def _remove_string(self, gstring: GString):
         """Extracted method to remove string: not mean to be used directly"""
         for gpoint in gstring.stones:
             for neighbour in gpoint.neighbours():
@@ -62,17 +65,17 @@ class GBoard:
                     neighbour_string.add_liberty(gpoint)
                 self._grid[gpoint] = None
 
-    def is_on_grid(self, gpoint):
+    def is_on_grid(self, gpoint: GPoint) -> bool:
         return 1 <= gpoint.row <= self.num_rows and \
                1 <= gpoint.col <= self.num_cols
 
-    def get(self, gpoint):
+    def get(self, gpoint: GPoint):
         gstring = self._grid.get(gpoint)
         if gstring is None:
             return None
         return gstring.color
 
-    def get_gstring(self, gpoint):
+    def get_gstring(self, gpoint: GPoint):
         gstring = self._grid.get(gpoint)
         if gstring is None:
             return None
