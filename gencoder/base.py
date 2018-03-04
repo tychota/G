@@ -2,7 +2,7 @@ from gboard.gstate import GState
 from gtypes.gpoint import GPoint
 
 
-class Encoder:
+class GEncoder:
     def name(self):
         """Used for loading an encoder by name"""
         raise NotImplementedError()
@@ -26,4 +26,3 @@ class Encoder:
     def shape(self):
         """Shape of the encoded board structure"""
         raise NotImplementedError()
-
