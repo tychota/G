@@ -44,10 +44,7 @@ class GState:
         """Prevent self capture"""
         if not gmove.is_play:
             return False
-        next_gboard = copy.deepcopy(self.gboard)
-        next_gboard.place_stone(gplayer, gmove.gpoint)
-        new_string = next_gboard.get_gstring(gmove.gpoint)
-        return new_string.num_liberties == 0
+        return self.gboard.is_self_capture(gplayer, gmove.gpoint)
 
     @property
     def situation(self):
@@ -57,8 +54,10 @@ class GState:
         """Test Ko rule"""
         if not gmove.is_play:
             return False
+        if not self.gboard.will_capture(gplayer, gmove.gpoint):
+            return False
 
-        next_gboard = copy.deepcopy(self.gboard)  # slow, need Zobrist hash
+        next_gboard = copy.deepcopy(self.gboard)
         next_gboard.place_stone(gplayer, gmove.gpoint)
         next_situation = (gplayer.other, next_gboard.zobrist_hash())
 
@@ -87,6 +86,8 @@ class GState:
         return self.last_gmove.is_pass and second_last_move.is_pass
 
     def legal_moves(self):
+        if self.is_over():
+            return []
         moves = []
         for row in range(1, self.gboard.num_rows + 1):
             for col in range(1, self.gboard.num_cols + 1):
