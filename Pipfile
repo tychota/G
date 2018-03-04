@@ -7,6 +7,9 @@ name = "pypi"
 
 [packages]
 
+numpy = "*"
+
 
 [dev-packages]
+
 six = "*"
