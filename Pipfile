@@ -8,6 +8,8 @@ name = "pypi"
 [packages]
 
 numpy = "*"
+keras = "*"
+tensorflow = "*"
 
 
 [dev-packages]
