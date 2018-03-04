@@ -4,6 +4,7 @@ from typing import TypeVar, Optional
 
 from gboard.gboard import GBoard
 from gboard.gmove import GMove
+from gboard.gscoring import compute_game_result
 from gtypes.gplayer import GPlayer
 from gtypes.gpoint import GPoint
 
@@ -99,3 +100,11 @@ class GState:
         moves.append(GMove.resign())
 
         return moves
+
+    def winner(self):
+        if not self.is_over():
+            return None
+        if self.last_gmove.is_resign:
+            return self.next_gplayer
+        game_result = compute_game_result(self)
+        return game_result.winner

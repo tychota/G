@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Optional
 
 from data import zobrist
 from gboard.gstring import GString
@@ -132,7 +132,7 @@ class GBoard:
     def zobrist_hash(self):
         return self._hash
 
-    def is_self_capture(self, player: GPlayer, point:GPoint):
+    def is_self_capture(self, player: GPlayer, point: GPoint) -> bool:
         friendly_strings: List[GString] = []
         for neighbour in self.neighbour_table[point]:
             neighbour_string = self._grid.get(neighbour)
@@ -150,7 +150,7 @@ class GBoard:
             return True
         return False
 
-    def will_capture(self, player: GPlayer, point: GPoint):
+    def will_capture(self, player: GPlayer, point: GPoint) -> bool:
         for neighbour in self.neighbour_table[point]:
             neighbour_string = self._grid.get(neighbour)
             if neighbour_string is None:
@@ -167,13 +167,13 @@ class GBoard:
         return 1 <= gpoint.row <= self.num_rows and \
                1 <= gpoint.col <= self.num_cols
 
-    def get(self, gpoint: GPoint):
+    def get(self, gpoint: GPoint) -> Optional[GPlayer]:
         gstring = self._grid.get(gpoint)
         if gstring is None:
             return None
         return gstring.color
 
-    def get_gstring(self, gpoint: GPoint):
+    def get_gstring(self, gpoint: GPoint) -> Optional[GString]:
         gstring = self._grid.get(gpoint)
         if gstring is None:
             return None
