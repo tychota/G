@@ -1,4 +1,6 @@
 from typing import List, Dict
+
+from data import zobrist
 from gboard.gstring import GString
 from gtypes.gplayer import GPlayer
 from gtypes.gpoint import GPoint
@@ -9,6 +11,7 @@ class GBoard:
         self.num_rows = num_rows
         self.num_cols = num_cols
         self._grid: Dict[GPoint, GString] = {}
+        self._hash = zobrist.EMPTY_BOARD
 
     def place_stone(self, gplayer: GPlayer, gpoint: GPoint):
         # safety nets
@@ -45,25 +48,38 @@ class GBoard:
         # And update the grid for it
         for new_gstring_gpoint in new_gstring.stones:
             self._grid[new_gstring_gpoint] = new_gstring
+
+        self._hash ^= zobrist.HASH_CODE[gpoint, gplayer]
+
         # Reduce liberties of adjacent opposite string
         for other_color_gstring in adjacent_opposite_color:
-            other_color_gstring.remove_liberty(gpoint)
-        # And capture if the adjacent stones have no more liberties
-        for other_color_gstring in adjacent_opposite_color:
-            if other_color_gstring.num_liberties == 0:
+            replacement = other_color_gstring.without_liberty(gpoint)
+            if replacement.num_liberties:
+                self._replace_string(replacement)
+            else:
                 self._remove_string(other_color_gstring)
+
+    def _replace_string(self, new_gstring: GString):
+        """Extracted method to replace string: not mean to be used directly"""
+        for point in new_gstring.stones:
+            self._grid[point] = new_gstring
 
     def _remove_string(self, gstring: GString):
         """Extracted method to remove string: not mean to be used directly"""
         for gpoint in gstring.stones:
             for neighbour in gpoint.neighbours():
-                neighbour_string = self._grid.get(neighbour)
-                if neighbour_string is None:
+                neighbour_gstring = self._grid.get(neighbour)
+                if neighbour_gstring is None:
                     continue
                 # Removing string add liberties to neighbour string of opposite colour
-                if neighbour_string is not gstring:
-                    neighbour_string.add_liberty(gpoint)
-                self._grid[gpoint] = None
+                if neighbour_gstring is not gstring:
+                    self._replace_string(neighbour_gstring.with_liberty(gpoint))
+            self._grid[gpoint] = None
+
+            self._hash ^= zobrist.HASH_CODE[gpoint, gstring.color]
+
+    def zobrist_hash(self):
+        return self._hash
 
     def is_on_grid(self, gpoint: GPoint) -> bool:
         return 1 <= gpoint.row <= self.num_rows and \

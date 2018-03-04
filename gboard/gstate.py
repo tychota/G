@@ -15,6 +15,12 @@ class GState:
         self.gboard = gboard
         self.next_gplayer = next_gplayer
         self.previous_gstate = previous_gstate
+        if self.previous_gstate is None:
+            self.previous_gstates = frozenset()
+        else:
+            self.previous_gstates = frozenset(
+                previous_gstate.previous_gstates |
+                {(previous_gstate.next_gplayer, previous_gstate.gboard.zobrist_hash())})
         self.last_gmove = gmove
 
     def apply_move(self, gmove: GMove):
@@ -51,16 +57,11 @@ class GState:
         if not gmove.is_play:
             return False
 
-        next_board = copy.deepcopy(self.gboard)  # slow, need Zobrist hash
-        next_board.place_stone(gplayer, gmove.gpoint)
-        next_situation = (gplayer.other, next_board)
+        next_gboard = copy.deepcopy(self.gboard)  # slow, need Zobrist hash
+        next_gboard.place_stone(gplayer, gmove.gpoint)
+        next_situation = (gplayer.other, next_gboard.zobrist_hash())
 
-        past_gstate = self.previous_gstate
-        while past_gstate is not None:
-            if past_gstate.situation == next_situation:
-                return True
-            past_gstate = past_gstate.previous_gstate
-        return False
+        return next_situation in self.previous_gstates
 
     def is_valid_move(self, gmove: GMove):
         """Return true if the move is valid"""
