@@ -1,4 +1,6 @@
+import warnings
 from typing import TypeVar
+
 
 from gtypes.gplayer import GPlayer
 from gtypes.gpoint import GPoint
@@ -13,20 +15,30 @@ class GString:
     """
     def __init__(self, color: GPlayer, stones, liberties):
         self.color = color
-        self.stones = set(stones)  # prevents duplicate
-        self.liberties = set(liberties)  # prevents duplicate
+        self.stones = frozenset(stones)  # prevents duplicate
+        self.liberties = frozenset(liberties)  # prevents duplicate
 
-    def remove_liberty(self, point: GPoint):
+    def without_liberty(self, gpoint: GPoint):
+        new_liberties = self.liberties - {gpoint}
+        return GString(self.color, self.stones, new_liberties)
+
+    def with_liberty(self, gpoint: GPoint):
+        new_liberties = self.liberties | {gpoint}
+        return GString(self.color, self.stones, new_liberties)
+
+    def remove_liberty(self, gpoint: GPoint):
         """Remove the liberty at a certain point
 
         This happens for instance if the other player plays at this points"""
-        self.liberties.remove(point)
+        warnings.warn("deprecated", DeprecationWarning)
+        self.liberties = self.without_liberty(gpoint)
 
-    def add_liberty(self, point: GPoint):
+    def add_liberty(self, gpoint: GPoint):
         """Add liberties at a certain point
 
         This happens for instance when player extends the string by playing near or capture other player stone"""
-        self.liberties.add(point)
+        warnings.warn("deprecated", DeprecationWarning)
+        self.liberties = self.with_liberty(gpoint)
 
     def merged_with(self, other_gstring: T):
         """merge two strings together
