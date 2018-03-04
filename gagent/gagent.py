@@ -1,4 +1,3 @@
-import random
 import math
 from typing import List
 
@@ -7,9 +6,10 @@ import numpy as np
 from gagent.helper import is_point_an_eye
 from gboard.gmove import GMove
 from gboard.gstate import GState
+from gsearch.mcts.node import MCTSNode
 from gtypes.gplayer import GPlayer
 from gtypes.gpoint import GPoint
-from mcts.node import MCTSNode
+from gutils.display import STONE_TO_CHAR
 
 
 class GAgent:
@@ -51,7 +51,7 @@ class GAgentMCTS(GAgent):
         self.num_rounds = num_rounds
         self.temperature = temperature
 
-    def select_move(self, game_state: GState):
+    def select_move(self, game_state: GState) -> GMove:
         root: MCTSNode = MCTSNode(game_state)
 
         for i in range(self.num_rounds):
@@ -63,7 +63,7 @@ class GAgentMCTS(GAgent):
                 mnode = mnode.add_random_child()
 
             winner = self.simulate_random_game(mnode.gstate)
-            print("x" if winner == GPlayer.white else "o", end='', flush=True)
+            print(STONE_TO_CHAR[winner], end='', flush=True)
 
             # Propagate the change from the winner to the tree
             while mnode is not None:

@@ -3,7 +3,7 @@ import time
 from gagent.gagent import GAgentRandom, GAgentMCTS
 from gboard.gstate import GState
 from gtypes.gplayer import GPlayer
-from utils.display import print_board, print_move
+from gutils.display import print_board, print_move
 
 
 def main():

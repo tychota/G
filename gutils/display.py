@@ -5,7 +5,7 @@ from gtypes.gpoint import GPoint
 
 COLS = 'ABCDEFGHJKLMNOPQRST'
 STONE_TO_CHAR = {
-    None: '.',
+    None: '_',
     GPlayer.black: 'x',
     GPlayer.white: 'o',
 }
