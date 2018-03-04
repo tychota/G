@@ -5,6 +5,7 @@ from typing import TypeVar, Optional
 from gboard.gboard import GBoard
 from gboard.gmove import GMove
 from gtypes.gplayer import GPlayer
+from gtypes.gpoint import GPoint
 
 T = TypeVar('T', bound='GState')
 
@@ -84,3 +85,16 @@ class GState:
         if second_last_move is None:
             return False
         return self.last_gmove.is_pass and second_last_move.is_pass
+
+    def legal_moves(self):
+        moves = []
+        for row in range(1, self.gboard.num_rows + 1):
+            for col in range(1, self.gboard.num_cols + 1):
+                move = GMove.play(GPoint(row, col))
+                if self.is_valid_move(move):
+                    moves.append(move)
+        # These two moves are always legal.
+        moves.append(GMove.pass_turn())
+        moves.append(GMove.resign())
+
+        return moves
