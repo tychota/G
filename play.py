@@ -1,6 +1,6 @@
 import time
 
-from gagent.gagent_naive import GAgentRandom
+from gagent.gagent import GAgentRandom
 from gboard.gstate import GState
 from gtypes.gplayer import GPlayer
 from utils.display import print_board, print_move

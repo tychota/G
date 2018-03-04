@@ -1,9 +1,14 @@
 import random
-from gagent.gagent_base import GAgent
+
 from gagent.helper import is_point_an_eye
 from gboard.gmove import GMove
 from gboard.gstate import GState
 from gtypes.gpoint import GPoint
+
+
+class GAgent:
+    def select_move(self, game_state: GState):
+        raise NotImplementedError()
 
 
 class GAgentRandom(GAgent):
