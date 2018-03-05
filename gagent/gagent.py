@@ -35,7 +35,7 @@ class GAgentRandom(GAgent):
         if dim != self.dim:
             self._update_cache(dim)
 
-        idx = np.arange(len(self.point_cache))
+        idx = np.ascontiguousarray(np.arange(len(self.point_cache)),  dtype=np.int)
         np.random.shuffle(idx)
 
         for i in idx:

@@ -130,9 +130,6 @@ class GBoard:
 
             self._hash ^= zobrist.HASH_CODE[gpoint, gstring.color]
 
-    def zobrist_hash(self):
-        return self._hash
-
     def is_self_capture(self, player: GPlayer, point: GPoint) -> bool:
         friendly_strings: List[GString] = []
         for neighbour in self.neighbour_table[point]:
@@ -179,3 +176,20 @@ class GBoard:
         if gstring is None:
             return None
         return gstring
+
+    def __eq__(self, other):
+        return isinstance(other, GBoard) and \
+            self.num_rows == other.num_rows and \
+            self.num_cols == other.num_cols and \
+            self._hash == other._hash
+
+    def __deepcopy__(self, memodict={}):
+        copied = GBoard(self.num_rows, self.num_cols)
+        # Can do a shallow copy b/c the dictionary maps tuples
+        # (immutable) to GoStrings (also immutable)
+        copied._grid = copy.copy(self._grid)
+        copied._hash = self._hash
+        return copied
+
+    def zobrist_hash(self):
+        return self._hash
