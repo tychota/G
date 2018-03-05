@@ -12,13 +12,12 @@ def generate_game(board_size, rounds, max_moves, temperature):
     boards = []
     moves = []
 
-    encoder: GEncoder = get_encoder_by_name('oneplane', board_size)
-
+    encoder: GEncoder = get_encoder_by_name('betago', board_size)
     game = GState.new_game(board_size)
-
     bot = GAgentMCTS(rounds, temperature)
 
     num_moves = 0
+
     while not game.is_over():
         print_board(game.gboard)
         gmove = bot.select_move(game)
