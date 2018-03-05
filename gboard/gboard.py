@@ -1,4 +1,5 @@
 from typing import List, Dict, Optional
+import copy
 
 from data import zobrist
 from gboard.gstring import GString

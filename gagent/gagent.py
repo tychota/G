@@ -2,6 +2,7 @@ import math
 from typing import List
 
 import numpy as np
+import progressbar
 
 from gagent.helper import is_point_an_eye
 from gboard.gmove import GMove
@@ -9,7 +10,6 @@ from gboard.gstate import GState
 from gsearch.mcts.node import MCTSNode
 from gtypes.gplayer import GPlayer
 from gtypes.gpoint import GPoint
-from gutils.display import STONE_TO_CHAR
 
 
 class GAgent:
@@ -54,7 +54,9 @@ class GAgentMCTS(GAgent):
     def select_move(self, game_state: GState) -> GMove:
         root: MCTSNode = MCTSNode(game_state)
 
-        for i in range(self.num_rounds):
+        bar = progressbar.ProgressBar()
+
+        for i in bar(range(self.num_rounds)):
             mnode: MCTSNode = root
             while (not mnode.can_add_child()) and (not mnode.is_terminal()):
                 mnode = self.select_child(mnode)
@@ -63,20 +65,20 @@ class GAgentMCTS(GAgent):
                 mnode = mnode.add_random_child()
 
             winner = self.simulate_random_game(mnode.gstate)
-            print(STONE_TO_CHAR[winner], end='', flush=True)
 
             # Propagate the change from the winner to the tree
             while mnode is not None:
                 mnode.record_win(winner)
                 mnode = mnode.mparent
-        print("")
+
         scored_moves = [
-            (child.winning_pct(game_state.next_gplayer), child.gmove.gpoint, child.num_rollouts)
+            (child.winning_pct(game_state.next_gplayer), child.gmove, child.num_rollouts)
             for child in root.mchildren
         ]
         scored_moves.sort(key=lambda x: x[0], reverse=True)
+
         for s, m, n in scored_moves[:10]:
-            print('%s - %.3f (%d)' % (m, s, n))
+            print('     %s - %.3f (%d)' % (m, s, n))
 
         best_move = None
         best_pct = -1.0
@@ -85,7 +87,7 @@ class GAgentMCTS(GAgent):
             if child_pct > best_pct:
                 best_pct = child_pct
                 best_move = mchild.gmove
-        print('Select move %s with win pct %.3f' % (best_move.gpoint, best_pct))
+        print('Select move %s with win pct %.3f' % (best_move, best_pct))
         return best_move
 
     def select_child(self, mnode: MCTSNode) -> MCTSNode:

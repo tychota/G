@@ -10,6 +10,8 @@ name = "pypi"
 numpy = "*"
 keras = "*"
 tensorflow = "*"
+terminaltables = "*"
+"progressbar2" = "*"
 
 
 [dev-packages]

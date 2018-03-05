@@ -1,5 +1,7 @@
 from gtypes.gpoint import GPoint
 
+COLS = 'ABCDEFGHJKLMNOPQRST'
+
 
 class GMove:
     """A move represent the action of a player at some point.
@@ -27,3 +29,12 @@ class GMove:
     def resign(cls):
         """Generate a resign move"""
         return GMove(is_resign=True)
+
+    def __str__(self):
+        if self.is_pass:
+            move_str = 'passes'
+        elif self.is_resign:
+            move_str = 'resigns'
+        else:
+            move_str = '%s%d' % (COLS[self.gpoint.col - 1], self.gpoint.row)
+        return move_str

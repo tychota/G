@@ -36,7 +36,10 @@ def generate_game(board_size, rounds, max_moves, temperature):
 
         if num_moves > max_moves:
             break
-
+    try:
+        print('Player %s win with %.2f' % (game.winner().name, game.winning_margin()))
+    except AttributeError:
+        pass
     return np.array(boards), np.array(moves)
 
 

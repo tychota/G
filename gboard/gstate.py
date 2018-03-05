@@ -1,4 +1,5 @@
 import copy
+import sys
 
 from typing import TypeVar, Optional
 
@@ -108,3 +109,11 @@ class GState:
             return self.next_gplayer
         game_result = compute_game_result(self)
         return game_result.winner
+
+    def winning_margin(self) -> Optional[float]:
+        if not self.is_over():
+            return 0
+        if self.last_gmove.is_resign:
+            return sys.maxsize
+        game_result = compute_game_result(self)
+        return game_result.winning_margin

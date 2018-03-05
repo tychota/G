@@ -19,7 +19,7 @@ def main():
         bot_move = bots[game.next_gplayer].select_move(game)
         print_move(game.next_gplayer, bot_move)
         game = game.apply_move(bot_move)
-    print(f"Winner is {game.winner().name}")
+    print("Winner is %s" % game.winner().name)
 
 
 if __name__ == '__main__':

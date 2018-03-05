@@ -1,5 +1,5 @@
 from collections import namedtuple
-from typing import List, Dict, Union
+from typing import List, Union, Dict
 
 from gboard.gboard import GBoard
 from gtypes.gplayer import GPlayer
@@ -109,7 +109,7 @@ def _collect_region(start_pos: GPoint, board: GBoard, visited: bool = None):
     return all_points, all_borders
 
 
-def compute_game_result(game_state, komi=7.5):
+def compute_game_result(game_state, komi=5.5):
     territory = evaluate_territory(game_state.gboard)
     return GameResult(
         territory.num_black_gterritory + territory.num_black_gstones,

@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "125c364a26586bf34503e3aeae5227744eb6f50755e27a34dd2019ce8e94a7b3"
+            "sha256": "f2598280cfce43faecc69a0392bde2aaf9ffe1fc8310917e47c17fd3caf4e89d"
         },
         "host-environment-markers": {
             "implementation_name": "cpython",
@@ -129,6 +129,13 @@
             ],
             "version": "==1.14.1"
         },
+        "progressbar2": {
+            "hashes": [
+                "sha256:abf5275650ce803dd9cc0043342882f19925bb41768381715aff9f02b8a26007",
+                "sha256:8600401956fc07852b309483590b424529ada8566447b2900a565218c66ee32c"
+            ],
+            "version": "==3.36.0"
+        },
         "protobuf": {
             "hashes": [
                 "sha256:11788df3e176f44e0375fe6361342d7258a457b346504ea259a21b77ffc18a90",
@@ -141,6 +148,13 @@
                 "sha256:95b78959572de7d7fafa3acb718ed71f482932ddddddbd29ba8319c10639d863"
             ],
             "version": "==3.5.1"
+        },
+        "python-utils": {
+            "hashes": [
+                "sha256:e25f840564554eaded56eaa395bca507b0b9e9f0ae5ecb13a8cb785305c56d25",
+                "sha256:34aaf26b39b0b86628008f2ae0ac001b30e7986a8d303b61e1357dfcdad4f6d3"
+            ],
+            "version": "==2.3.0"
         },
         "pyyaml": {
             "hashes": [
@@ -225,6 +239,12 @@
                 "sha256:1d6d69ce66211143803fbc56652b41d73b4a400a2891d7bf7a1cdf4c02de613b"
             ],
             "version": "==1.1.0"
+        },
+        "terminaltables": {
+            "hashes": [
+                "sha256:f3eb0eb92e3833972ac36796293ca0906e998dc3be91fbe1f8615b331b853b81"
+            ],
+            "version": "==3.1.0"
         },
         "werkzeug": {
             "hashes": [

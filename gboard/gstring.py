@@ -58,3 +58,6 @@ class GString:
                self.color == other.color and \
                self.stones == other.stones and \
                self.liberties == other.liberties
+
+    def __deepcopy__(self, memodict={}):
+        return GString(self.color, self.stones, copy.deepcopy(self.liberties))
