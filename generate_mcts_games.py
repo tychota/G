@@ -1,5 +1,6 @@
 import argparse
 import numpy as np
+from pathlib import Path
 
 from gencoder import get_encoder_by_name
 from gboard.gstate import GState
@@ -44,17 +45,22 @@ def generate_game(board_size, rounds, max_moves, temperature):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--board-size', '-b', type=int, default=9)
-    parser.add_argument('--rounds', '-r', type=int, default=1000)
+    parser.add_argument('--board-size', '-b', type=int, default=3)
+    parser.add_argument('--rounds', '-r', type=int, default=100)
     parser.add_argument('--temperature', '-t', type=float, default=0.8)
     parser.add_argument('--max-moves', '-m', type=int, default=60, help='Max moves per game.')
     parser.add_argument('--num-games', '-n', type=int, default=10)
-    parser.add_argument('--board-out')
-    parser.add_argument('--move-out')
+    parser.add_argument('--board-out', default="data/features.npy")
+    parser.add_argument('--move-out', default="data/label.npy")
     args = parser.parse_args()
 
-    Xs = []
-    ys = []
+    if Path(args.board_out).is_file() and Path(args.move_out).is_file():
+        Xs = [np.load(args.board_out)]
+        ys = [np.load(args.move_out)]
+    else:
+        Xs = []
+        ys = []
+
 
     for i in range(args.num_games):
         print('########################')
@@ -63,10 +69,10 @@ def main():
         X, y = generate_game(args.board_size, args.rounds, args.max_moves, args.temperature)
         Xs.append(X)
         ys.append(y)
-        X = np.concatenate(Xs)
-        y = np.concatenate(ys)
-        np.save(args.board_out, X)
-        np.save(args.move_out, y)
+        Xt = np.concatenate(Xs)
+        yt = np.concatenate(ys)
+        np.save(args.board_out, Xt)
+        np.save(args.move_out, yt)
 
 if __name__:
     main()
