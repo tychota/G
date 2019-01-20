@@ -143,9 +143,15 @@ class GameState():
             return False
         if self.last_move.is_resign:
             return True
-
         second_last_move = self.previous_state.last_move
         if second_last_move is None:
             return False
-
         return self.last_move.is_pass and second_last_move.is_pass
+
+    def is_move_self_capture(self, player: Player, move: Move):
+        if not move.is_play:
+            return False
+        next_board = copy.deepcopy(self.board)
+        next_board.place_stone(player, move.point)
+        new_gostring = next_board.get_go_string(move.point)
+        return new_gostring.num_liberties == 0
