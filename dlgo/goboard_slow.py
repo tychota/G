@@ -137,3 +137,15 @@ class GameState():
             board_size = (board_size, board_size)
         board = Board(*board_size)
         return GameState(board, Player.black, None, None)
+
+    def is_over(self) -> bool:
+        if self.last_move is None:
+            return False
+        if self.last_move.is_resign:
+            return True
+
+        second_last_move = self.previous_state.last_move
+        if second_last_move is None:
+            return False
+
+        return self.last_move.is_pass and second_last_move.is_pass
