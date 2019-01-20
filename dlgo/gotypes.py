@@ -1,5 +1,5 @@
 import enum
-from typing import List
+from typing import List, NamedTuple
 from collections import namedtuple
 
 
@@ -12,7 +12,10 @@ class Player(enum.Enum):
         return Player.black if self == Player.white else Player.white
 
 
-class Point(namedtuple('Point', 'row col')):
+class Point(NamedTuple):
+    row: int
+    col: int
+
     def neightbors(self) -> List['Point']:
         return [
             Point(self.row - 1, self.col),
