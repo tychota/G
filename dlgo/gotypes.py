@@ -1,4 +1,5 @@
 import enum
+from typing import List
 from collections import namedtuple
 
 
@@ -12,7 +13,7 @@ class Player(enum.Enum):
 
 
 class Point(namedtuple('Point', 'row col')):
-    def neightbors(self):
+    def neightbors(self) -> List[Point]:
         return [
             Point(self.row - 1, self.col),
             Point(self.row + 1, self.col),
