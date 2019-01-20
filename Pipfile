@@ -7,4 +7,8 @@ name = 'pypi'
 python_version = '3.6'
 
 [dev-packages]
+yapf = '*'
 pytest = '*'
+mypy = '*'
+flake8 = '*'
+flake8-mypy = '*'

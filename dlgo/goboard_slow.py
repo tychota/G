@@ -1,5 +1,5 @@
 import copy
-from typing import List, Mapping
+from typing import Collection, Dict, Optional, Union, Tuple, List
 from dlgo.gotypes import Player, Point
 
 
@@ -25,7 +25,7 @@ class Move():
 
 
 class GoString():
-    def __init__(self, color: Player, stones: List[Point], liberties: List[Point]):
+    def __init__(self, color: Player, stones: Collection[Point], liberties: Collection[Point]):
         self.color = color
         self.stones = set(stones)
         self.liberties = set(liberties)
@@ -36,7 +36,7 @@ class GoString():
     def add_liberty(self, point):
         self.liberties.add(point)
 
-    def merged_with(self, go_string: GoString):
+    def merged_with(self, go_string: 'GoString'):
         assert go_string.color == self.color
         combined_stones = self.stones | go_string.stones
         combined_liberties = (self.liberties | go_string.liberties) - combined_stones
@@ -46,7 +46,7 @@ class GoString():
     def num_liberties(self):
         return len(self.liberties)
 
-    def __eq__(self, other: GoString):
+    def __eq__(self, other: object):
         if not isinstance(other, GoString):
             return False
         return self.color == other.color and self.stones == other.stones and self.liberties == other.liberties
@@ -56,7 +56,7 @@ class Board():
     def __init__(self, num_rows, nums_cols):
         self.num_rows = num_rows
         self.num_cols = nums_cols
-        self._grid: Mapping[Point, GoString] = {}
+        self._grid: Dict[Point, Optional[GoString]] = {}
 
     def place_stone(self, player: Player, point: Point):
         assert self.is_on_grid(point)
@@ -69,7 +69,7 @@ class Board():
         for neighbor in point.neightbors():
             if not self.is_on_grid(neighbor):
                 continue
-            neighbor_gostring: GoString = self._grid.get(neighbor)
+            neighbor_gostring: Optional[GoString] = self._grid.get(neighbor)
             if neighbor_gostring is None:
                 liberties.append(neighbor)
             elif neighbor_gostring.color == player:
@@ -94,21 +94,21 @@ class Board():
         return 1 <= point.row <= self.num_rows and 1 <= point.col <= self.num_cols
 
     def get(self, point: Point) -> Player:
-        string = self._grid.get(point)
-        if string == None:
+        gostring = self._grid.get(point)
+        if gostring is None:
             return None
-        return string.color
+        return gostring.color
 
-    def get_go_string(self, point: Point) -> GoString:
-        string = self._grid.get(point)
-        if string == None:
+    def get_go_string(self, point: Point) -> Optional[GoString]:
+        gostring = self._grid.get(point)
+        if gostring is None:
             return None
-        return string
+        return gostring
 
     def _remove_string(self, gostring: GoString):
         for point in gostring.stones:
             for neighbor in point.neightbors():
-                neighbor_gostring: GoString = self._grid.get(neighbor)
+                neighbor_gostring = self._grid.get(neighbor)
                 if neighbor_gostring is None:
                     continue
                 if neighbor_gostring is not gostring:
@@ -117,7 +117,7 @@ class Board():
 
 
 class GameState():
-    def __init__(self, board: Board, next_player: Player, previous_state: GameState, move: Move):
+    def __init__(self, board: Board, next_player: Player, previous_state: Optional['GameState'], move: Optional[Move]):
         self.board = board
         self.next_player = next_player
         self.previous_state = previous_state
@@ -132,7 +132,7 @@ class GameState():
         return GameState(next_board, self.next_player.other, self, move)
 
     @classmethod
-    def new_game(cls, board_size: int):
+    def new_game(cls, board_size: Union[int, Tuple[int, int]]):
         if isinstance(board_size, int):
             board_size = (board_size, board_size)
         board = Board(*board_size)

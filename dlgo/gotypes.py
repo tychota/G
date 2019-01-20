@@ -1,6 +1,5 @@
 import enum
 from typing import List, NamedTuple
-from collections import namedtuple
 
 
 class Player(enum.Enum):
