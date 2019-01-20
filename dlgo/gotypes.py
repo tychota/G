@@ -22,3 +22,6 @@ class Point(NamedTuple):
             Point(self.row, self.col - 1),
             Point(self.row, self.col + 1),
         ]
+
+
+__all__ = ["Player", "Point"]
