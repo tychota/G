@@ -8,8 +8,8 @@ from dlgo.gotypes import Point
 class RandomBot(Agent):
     def select_move(self, game_state: GameState):
         candidates = []
-        for row_index in range(1, game_state.board.num_row + 1):
-            for col_index in range(1, game_state.board.num_col + 1):
+        for row_index in range(1, game_state.board.num_rows + 1):
+            for col_index in range(1, game_state.board.num_cols + 1):
                 candidate = Point(row=row_index, col=col_index)
                 is_valid_move = game_state.is_valid_move(Move.play(candidate))
                 is_not_stupid_move = not is_point_an_eye(game_state.board, candidate, game_state.next_player)

@@ -16,7 +16,7 @@ class Move():
         return Move(point=point)
 
     @classmethod
-    def pass_turn(cls, point):
+    def pass_turn(cls):
         return Move(is_pass=True)
 
     @classmethod
