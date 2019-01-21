@@ -49,7 +49,7 @@ class IllegalMoveError(Exception):
     pass
 
 
-class GoString():
+class GoString:
     """Stones that are linked by a chain of connected stones of the
     same color.
     """
@@ -60,11 +60,11 @@ class GoString():
         self.liberties = frozenset(liberties)
 
     def without_liberty(self, point: Point):
-        new_liberties = self.liberties - set([point])
+        new_liberties = self.liberties - {point}
         return GoString(self.color, self.stones, new_liberties)
 
     def with_liberty(self, point: Point):
-        new_liberties = self.liberties | set([point])
+        new_liberties = self.liberties | {point}
         return GoString(self.color, self.stones, new_liberties)
 
     def merged_with(self, string: 'GoString'):
@@ -83,11 +83,11 @@ class GoString():
             self.stones == other.stones and \
             self.liberties == other.liberties
 
-    def __deepcopy__(self, memodict={}):
+    def __deepcopy__(self):
         return GoString(self.color, self.stones, copy.deepcopy(self.liberties))
 
 
-class Board():
+class Board:
     def __init__(self, num_rows: int, num_cols: int):
         self.num_rows = num_rows
         self.num_cols = num_cols
@@ -230,7 +230,7 @@ class Board():
             self.num_cols == other.num_cols and \
             self._hash() == other._hash()
 
-    def __deepcopy__(self, memodict={}):
+    def __deepcopy__(self):
         copied = Board(self.num_rows, self.num_cols)
         # Can do a shallow copy b/c the dictionary maps tuples
         # (immutable) to GoStrings (also immutable)
@@ -242,7 +242,7 @@ class Board():
         return self._hash
 
 
-class Move():
+class Move:
     """Any action a player can play on a turn.
     Exactly one of is_play, is_pass, is_resign will be set.
     """
@@ -282,8 +282,8 @@ class Move():
                                                                             other.is_resign, other.point)
 
 
-class GameState():
-    def __init__(self, board: Board, next_player: Player, previous: 'GameState', move: Move):
+class GameState:
+    def __init__(self, board: Board, next_player: Player, previous: Optional['GameState'], move: Optional[Move]):
         self.board = board
         self.next_player = next_player
         self.previous_state = previous
@@ -318,7 +318,7 @@ class GameState():
 
     @property
     def situation(self):
-        return (self.next_player, self.board)
+        return self.next_player, self.board
 
     def does_move_violate_ko(self, player: Player, move: Move):
         if not move.is_play:
