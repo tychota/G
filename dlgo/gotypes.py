@@ -15,7 +15,7 @@ class Point(NamedTuple):
     row: int
     col: int
 
-    def neighbors(self) -> List['Point']:
+    def neighbors(self):
         return [
             Point(self.row - 1, self.col),
             Point(self.row + 1, self.col),

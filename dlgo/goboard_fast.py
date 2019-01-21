@@ -83,7 +83,7 @@ class GoString:
             self.stones == other.stones and \
             self.liberties == other.liberties
 
-    def __deepcopy__(self):
+    def __deepcopy__(self, memodict={}):
         return GoString(self.color, self.stones, copy.deepcopy(self.liberties))
 
 
@@ -230,7 +230,7 @@ class Board:
             self.num_cols == other.num_cols and \
             self._hash() == other._hash()
 
-    def __deepcopy__(self):
+    def __deepcopy__(self, memodict={}):
         copied = Board(self.num_rows, self.num_cols)
         # Can do a shallow copy b/c the dictionary maps tuples
         # (immutable) to GoStrings (also immutable)
