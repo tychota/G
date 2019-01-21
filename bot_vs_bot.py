@@ -1,7 +1,7 @@
 from __future__ import print_function
 
 from dlgo.agent.naive import RandomBot
-from dlgo.goboard_slow import GameState
+from dlgo.goboard_fast import GameState
 from dlgo.gotypes import Player
 from dlgo.utils import print_board, print_move
 

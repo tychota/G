@@ -25,7 +25,7 @@ class TestPoint:
 
     def test_neighbor(self):
         point = Point(3, 4)
-        neighbors = point.neightbors()
+        neighbors = point.neighbors()
 
         expected = [Point(row=2, col=4), Point(row=4, col=4), Point(row=3, col=3), Point(row=3, col=5)]
 

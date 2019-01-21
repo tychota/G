@@ -1,6 +1,6 @@
 from terminaltables import AsciiTable
 
-from dlgo.goboard_slow import Board, Move
+from dlgo.goboard_fast import Board, Move
 from dlgo.gotypes import Point, Player
 
 COLS = 'ABCDEFGHJKLMNOPQRST'

@@ -66,7 +66,7 @@ class Board():
         adjacent_gostrings_other_color: List[GoString] = []
         liberties: List[Point] = []
 
-        for neighbor in point.neightbors():
+        for neighbor in point.neighbors():
             if not self.is_on_grid(neighbor):
                 continue
             neighbor_gostring: Optional[GoString] = self._grid.get(neighbor)
@@ -107,7 +107,7 @@ class Board():
 
     def _remove_string(self, gostring: GoString):
         for point in gostring.stones:
-            for neighbor in point.neightbors():
+            for neighbor in point.neighbors():
                 neighbor_gostring = self._grid.get(neighbor)
                 if neighbor_gostring is None:
                     continue

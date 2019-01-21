@@ -1,4 +1,4 @@
-from dlgo.goboard_slow import Move
+from dlgo.goboard_fast import Move
 
 
 class Agent:

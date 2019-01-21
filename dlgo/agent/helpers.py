@@ -1,5 +1,5 @@
 from dlgo.gotypes import Point, Player
-from dlgo.goboard_slow import Board
+from dlgo.goboard_fast import Board
 
 
 # this ignore falsey life eyes: https://senseis.xmp.net/?FalseEyeLife
@@ -7,7 +7,7 @@ def is_point_an_eye(board: Board, point: Point, color: Player):
     if board.get(point) is not None:
         return False
     # all adjacent neighbor must contains friendly stones
-    for neighbor in point.neightbors():
+    for neighbor in point.neighbors():
         if board.is_on_grid(neighbor):
             neighbor_color = board.get(neighbor)
             if neighbor_color != color:

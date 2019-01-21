@@ -73,7 +73,7 @@ class Board():
         adjacent_gostrings_other_color: List[GoString] = []
         liberties: List[Point] = []
 
-        for neighbor in point.neightbors():
+        for neighbor in point.neighbors():
             if not self.is_on_grid(neighbor):
                 continue
             neighbor_gostring: Optional[GoString] = self._grid.get(neighbor)
