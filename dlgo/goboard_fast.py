@@ -1,4 +1,6 @@
 import copy
+from typing import Collection, Dict, Optional, Tuple, List, FrozenSet
+
 from dlgo.gotypes import Player, Point
 # from dlgo.scoring import compute_game_result
 from dlgo import zobrist
@@ -10,11 +12,11 @@ __all__ = [
     'Move',
 ]
 
-neighbor_tables = {}
-corner_tables = {}
+neighbor_tables: Dict[Tuple[int, int], Dict[Point, List[Point]]] = {}
+corner_tables: Dict[Tuple[int, int], Dict[Point, List[Point]]] = {}
 
 
-def init_neighbor_table(dim):
+def init_neighbor_table(dim: Tuple[int, int]):
     rows, cols = dim
     new_table = {}
     for r in range(1, rows + 1):
@@ -26,7 +28,7 @@ def init_neighbor_table(dim):
     neighbor_tables[dim] = new_table
 
 
-def init_corner_table(dim):
+def init_corner_table(dim: Tuple[int, int]):
     rows, cols = dim
     new_table = {}
     for r in range(1, rows + 1):
@@ -52,20 +54,20 @@ class GoString():
     same color.
     """
 
-    def __init__(self, color, stones, liberties):
+    def __init__(self, color: Player, stones: Collection[Point], liberties: Collection[Point]):
         self.color = color
         self.stones = frozenset(stones)
         self.liberties = frozenset(liberties)
 
-    def without_liberty(self, point):
+    def without_liberty(self, point: Point):
         new_liberties = self.liberties - set([point])
         return GoString(self.color, self.stones, new_liberties)
 
-    def with_liberty(self, point):
+    def with_liberty(self, point: Point):
         new_liberties = self.liberties | set([point])
         return GoString(self.color, self.stones, new_liberties)
 
-    def merged_with(self, string):
+    def merged_with(self, string: 'GoString'):
         """Return a new string containing all stones in both strings."""
         assert string.color == self.color
         combined_stones = self.stones | string.stones
@@ -86,10 +88,10 @@ class GoString():
 
 
 class Board():
-    def __init__(self, num_rows, num_cols):
+    def __init__(self, num_rows: int, num_cols: int):
         self.num_rows = num_rows
         self.num_cols = num_cols
-        self._grid = {}
+        self._grid: Dict[Point, Optional[GoString]] = {}
         self._hash = zobrist.EMPTY_BOARD
 
         global neighbor_tables
@@ -102,21 +104,21 @@ class Board():
         self.corner_table = corner_tables[dim]
         # self.move_ages = MoveAge(self)
 
-    def neighbors(self, point):
+    def neighbors(self, point: Point):
         return self.neighbor_table[point]
 
-    def corners(self, point):
+    def corners(self, point: Point):
         return self.corner_table[point]
 
-    def place_stone(self, player, point):
+    def place_stone(self, player: Player, point: Point):
         assert self.is_on_grid(point)
         if self._grid.get(point) is not None:
             print('Illegal play on %s' % str(point))
         assert self._grid.get(point) is None
         # 0. Examine the adjacent points.
-        adjacent_same_color = []
-        adjacent_opposite_color = []
-        liberties = []
+        adjacent_same_color: List[GoString] = []
+        adjacent_opposite_color: List[GoString] = []
+        liberties: List[Point] = []
         # self.move_ages.increment_all()
         # self.move_ages.add(point)
         for neighbor in self.neighbor_table[point]:
@@ -147,11 +149,11 @@ class Board():
             else:
                 self._remove_string(other_color_string)
 
-    def _replace_string(self, new_string):
+    def _replace_string(self, new_string: GoString):
         for point in new_string.stones:
             self._grid[point] = new_string
 
-    def _remove_string(self, string):
+    def _remove_string(self, string: GoString):
         for point in string.stones:
             # self.move_ages.reset_age(point)
 
@@ -167,7 +169,7 @@ class Board():
 
             # self._hash ^= zobrist.HASH_CODE[point, None]
 
-    def is_self_capture(self, player, point):
+    def is_self_capture(self, player: Player, point: Point):
         friendly_strings = []
         for neighbor in self.neighbor_table[point]:
             neighbor_string = self._grid.get(neighbor)
@@ -185,7 +187,7 @@ class Board():
             return True
         return False
 
-    def will_capture(self, player, point):
+    def will_capture(self, player: Player, point: Point):
         for neighbor in self.neighbor_table[point]:
             neighbor_string = self._grid.get(neighbor)
             if neighbor_string is None:
@@ -198,11 +200,11 @@ class Board():
                     return True
         return False
 
-    def is_on_grid(self, point):
+    def is_on_grid(self, point: Point):
         return 1 <= point.row <= self.num_rows and \
             1 <= point.col <= self.num_cols
 
-    def get(self, point):
+    def get(self, point: Point):
         """Return the content of a point on the board.
         Returns None if the point is empty, or a Player if there is a
         stone on that point.
@@ -212,7 +214,7 @@ class Board():
             return None
         return string.color
 
-    def get_go_string(self, point):
+    def get_go_string(self, point: Point):
         """Return the entire string of stones at a point.
         Returns None if the point is empty, or a GoString if there is
         a stone on that point.
@@ -245,7 +247,7 @@ class Move():
     Exactly one of is_play, is_pass, is_resign will be set.
     """
 
-    def __init__(self, point=None, is_pass=False, is_resign=False):
+    def __init__(self, point: Optional[Point] = None, is_pass=False, is_resign=False):
         assert (point is not None) ^ is_pass ^ is_resign
         self.point = point
         self.is_play = (self.point is not None)
@@ -281,18 +283,19 @@ class Move():
 
 
 class GameState():
-    def __init__(self, board, next_player, previous, move):
+    def __init__(self, board: Board, next_player: Player, previous: 'GameState', move: Move):
         self.board = board
         self.next_player = next_player
         self.previous_state = previous
         if previous is None:
-            self.previous_states = frozenset()
+            self.previous_states: FrozenSet[Tuple[Player, int]] = frozenset()
         else:
-            self.previous_states = frozenset(previous.previous_states
-                                             | {(previous.next_player, previous.board.zobrist_hash())})
+            self.previous_states: FrozenSet[Tuple[Player, int]] = frozenset(previous.previous_states
+                                                                            | {(previous.next_player,
+                                                                                previous.board.zobrist_hash())})
         self.last_move = move
 
-    def apply_move(self, move):
+    def apply_move(self, move: Move):
         """Return the new GameState after applying the move."""
         if move.is_play:
             next_board = copy.deepcopy(self.board)
@@ -308,7 +311,7 @@ class GameState():
         board = Board(*board_size)
         return GameState(board, Player.black, None, None)
 
-    def is_move_self_capture(self, player, move):
+    def is_move_self_capture(self, player: Player, move: Move):
         if not move.is_play:
             return False
         return self.board.is_self_capture(player, move.point)
@@ -317,7 +320,7 @@ class GameState():
     def situation(self):
         return (self.next_player, self.board)
 
-    def does_move_violate_ko(self, player, move):
+    def does_move_violate_ko(self, player: Player, move: Move):
         if not move.is_play:
             return False
         if not self.board.will_capture(player, move.point):
@@ -327,7 +330,7 @@ class GameState():
         next_situation = (player.other, next_board.zobrist_hash())
         return next_situation in self.previous_states
 
-    def is_valid_move(self, move):
+    def is_valid_move(self, move: Move):
         if self.is_over():
             return False
         if move.is_pass or move.is_resign:
