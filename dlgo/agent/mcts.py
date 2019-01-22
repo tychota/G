@@ -1,4 +1,5 @@
 import math
+import progressbar
 
 from dlgo.agent.base import Agent
 from dlgo.agent.naive import RandomBot
@@ -21,18 +22,20 @@ class MCTSAgent(Agent):
     def select_move(self, game_state: GameState) -> Move:
         root = MCTSNode(game_state)
 
-        for i in range(self.num_rounds):
-            node = root
-            while not node.can_add_child() and not node.is_terminal():
-                node = self.select_child(node)
+        with progressbar.ProgressBar(max_value=self.num_rounds) as bar:
+            for i in range(self.num_rounds):
+                node = root
+                while not node.can_add_child() and not node.is_terminal():
+                    node = self.select_child(node)
 
-            if node.can_add_child():
-                node = node.add_random_child()
+                if node.can_add_child():
+                    node = node.add_random_child()
 
-            winner = self.simulate_random_game(node.game_state)
-            while node is not None:
-                node.record_win(winner)
-                node = node.parent
+                winner = self.simulate_random_game(node.game_state)
+                while node is not None:
+                    node.record_win(winner)
+                    node = node.parent
+                bar.update(i)
 
         scored_moves = [
             (child.winning_pct(game_state.next_player), child.move, child.num_rollouts)

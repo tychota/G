@@ -8,6 +8,9 @@ python_version = '3.6'
 
 [packages]
 terminaltables = '*'
+progressbar2 = '*'
+keras = '*'
+tensorflow-gpu = '*'
 
 [dev-packages]
 yapf = '*'
