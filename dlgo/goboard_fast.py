@@ -2,7 +2,7 @@ import copy
 from typing import Collection, Dict, Optional, Tuple, List, FrozenSet
 
 from dlgo.gotypes import Player, Point
-# from dlgo.scoring import compute_game_result
+from dlgo.scoring import compute_game_result
 from dlgo import zobrist
 # from dlgo.utils import MoveAge
 
@@ -242,6 +242,9 @@ class Board:
         return self._hash
 
 
+COLS = 'ABCDEFGHJKLMNOPQRST'
+
+
 class Move:
     """Any action a player can play on a turn.
     Exactly one of is_play, is_pass, is_resign will be set.
@@ -269,10 +272,12 @@ class Move:
 
     def __str__(self):
         if self.is_pass:
-            return 'pass'
-        if self.is_resign:
-            return 'resign'
-        return '(r %d, c %d)' % (self.point.row, self.point.col)
+            move_str = 'passes'
+        elif self.is_resign:
+            move_str = 'resigns'
+        else:
+            move_str = '%s%d' % (COLS[self.point.col - 1], self.point.row)
+        return move_str
 
     def __hash__(self):
         return hash((self.is_play, self.is_pass, self.is_resign, self.point))
@@ -363,10 +368,10 @@ class GameState:
 
         return moves
 
-    # def winner(self):
-    #     if not self.is_over():
-    #         return None
-    #     if self.last_move.is_resign:
-    #         return self.next_player
-    #     game_result = compute_game_result(self)
-    #     return game_result.winner
+    def winner(self):
+        if not self.is_over():
+            return None
+        if self.last_move.is_resign:
+            return self.next_player
+        game_result = compute_game_result(self)
+        return game_result.winner
