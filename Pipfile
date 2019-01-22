@@ -11,6 +11,7 @@ terminaltables = '*'
 progressbar2 = '*'
 keras = '*'
 tensorflow-gpu = '*'
+matplotlib = '*'
 
 [dev-packages]
 yapf = '*'

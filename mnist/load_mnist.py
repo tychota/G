@@ -14,7 +14,7 @@ def shape_data(data):
 
     labels = [encode_label(y) for y in data[1]]
 
-    return zip(features, labels)
+    return list(zip(features, labels))
 
 
 def load_data():
