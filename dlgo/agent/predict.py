@@ -1,3 +1,4 @@
+import tensorflow
 from typing import Dict, Any
 
 import numpy as np
@@ -20,7 +21,8 @@ class DeepLearningAgent(Agent):
     def predict(self, game_state):
         encoded_state = self.encoder.encode(game_state)
         input_tensor = np.array([encoded_state])
-        return self.model.predict(input_tensor)[0]
+        with graph.as_default():
+            return self.model.predict(input_tensor)[0]
 
     def select_move(self, game_state: GameState):
         num_moves = self.encoder.board_width * self.encoder.board_height
@@ -64,4 +66,6 @@ def load_prediction_agent(h5file: File):
     board_height = h5file['encoder'].attrs['board_height']
     encoder = get_encoder_by_name(
         encoder_name, (board_width, board_height))
+    global graph
+    graph = tensorflow.get_default_graph()
     return DeepLearningAgent(model, encoder)
