@@ -15,7 +15,7 @@ def main():
     game_state = GameState.new_game(board_size)
     bots = {
         Player.black: load_prediction_agent(h5py.File("./agents/deep_bot.h5", "r")),
-        Player.white: RandomBot(),
+        Player.white: load_prediction_agent(h5py.File("./agents/deep_bot.h5", "r")),
     }
     while not game_state.is_over():
         # time.sleep(0.3)
