@@ -7,6 +7,9 @@ __all__ = [
 
 
 class Encoder:
+    board_width: int
+    board_height: int
+
     def name(self):
         raise NotImplementedError()
 
