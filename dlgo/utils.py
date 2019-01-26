@@ -24,3 +24,16 @@ def print_board(board: Board):
             line.append(STONE_TO_CHAR[stone])
         table.append(line)
     print(AsciiTable(table).table)
+
+
+def point_from_coords(coords):
+    col = COLS.index(coords[0]) + 1
+    row = int(coords[1:])
+    return Point(row=row, col=col)
+
+
+def coords_from_point(point):
+    return '%s%d' % (
+        COLS[point.col - 1],
+        point.row
+    )
