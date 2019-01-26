@@ -35,17 +35,19 @@ model.summary()
 
 model.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=['accuracy'])
 
+filepath = "./checkpoints/large_model_best.h5"
+checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
+tensorboard = TensorBoard(log_dir='./logs', histogram_freq=0, batch_size=128, write_graph=True,
+                          write_grads=True, write_images=True, embeddings_freq=0,
+                          embeddings_layer_names=None, embeddings_metadata=None, embeddings_data=None,
+                          update_freq='batch')
+callbacks_list = [checkpoint, tensorboard]
 model.fit_generator(generator=generator.generate(batch_size, nb_classes),
                     epochs=epochs,
                     steps_per_epoch=generator.get_num_samples() / batch_size,
                     validation_data=test_generator.generate(batch_size, nb_classes),
                     validation_steps=test_generator.get_num_samples() / batch_size,
-                    callbacks=[
-                        ModelCheckpoint('./checkpoints/large_model_epoch_{epoch}.h5'),
-                        TensorBoard(log_dir='./logs', histogram_freq=0, batch_size=128, write_graph=True,
-                                    write_grads=True, write_images=True, embeddings_freq=0,
-                                    embeddings_layer_names=None, embeddings_metadata=None, embeddings_data=None,
-                                    update_freq='batch')]
+                    callbacks=callbacks_list
                     )
 
 model.evaluate_generator(generator=test_generator.generate(batch_size, nb_classes),
