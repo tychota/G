@@ -1,4 +1,4 @@
-from dlgo.data.parallel_procesor import GoDataProcessor
+from dlgo.data.parallel_processor import GoDataProcessor
 
 processor = GoDataProcessor(encoder='oneplane')
 generator = processor.load_go_data('train', 10000, use_generator=True)

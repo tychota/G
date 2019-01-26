@@ -34,7 +34,6 @@ class GoDataProcessor:
         self.encoder = get_encoder_by_name(encoder, 19)
         self.data_dir = data_directory
 
-# tag::load_generator[]
     def load_go_data(self, data_type='train', num_samples=1000,
                      use_generator=False):
         index = KGSIndex(data_directory=self.data_dir)
@@ -43,18 +42,13 @@ class GoDataProcessor:
         sampler = Sampler(data_dir=self.data_dir)
         data = sampler.draw_data(data_type, num_samples)
 
-        self.map_to_workers(data_type, data)  # <1>
+        self.map_to_workers(data_type, data)
         if use_generator:
             generator = DataGenerator(self.data_dir, data)
-            return generator  # <2>
+            return generator
         else:
             features_and_labels = self.consolidate_games(data_type, data)
-            return features_and_labels  # <3>
-
-# <1> Map workload to CPUs
-# <2> Either return a Go data generator...
-# <3> ... or return consolidated data as before.
-# end::load_generator[]
+            return features_and_labels
 
     def unzip_data(self, zip_file_name):
         this_gz = gzip.open(self.data_dir + '/' + zip_file_name)

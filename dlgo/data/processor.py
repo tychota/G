@@ -23,8 +23,7 @@ class GoDataProcessor:
         self.encoder = get_encoder_by_name(encoder, 19)
         self.data_dir = data_directory
 
-    def load_go_data(self, data_type='train',
-                     num_samples=1000):
+    def load_go_data(self, data_type='train', num_samples=1000):
         index = KGSIndex(data_directory=self.data_dir)
         index.download_files()
 
