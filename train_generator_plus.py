@@ -11,9 +11,9 @@ from keras.callbacks import ModelCheckpoint, TensorBoard
 
 go_board_rows, go_board_cols = 19, 19
 nb_classes = go_board_rows * go_board_cols
-epochs = 250
-num_game = 3000
-batch_size = 128
+epochs = 20
+num_game = 5000
+batch_size = 256
 
 encoder = SevenPlaneEncoder((go_board_rows, go_board_cols))
 processor = GoDataProcessor(encoder=encoder.name())
@@ -22,7 +22,7 @@ input_channels = encoder.num_planes
 input_shape = (input_channels, go_board_rows, go_board_cols)
 
 generator = processor.load_go_data('train', num_game, use_generator=True)
-test_generator = processor.load_go_data('test', int(num_game / 10), use_generator=True)
+test_generator = processor.load_go_data('test', int(num_game / 4), use_generator=True)
 
 model = Sequential()
 network_layers = layers(input_shape)
@@ -36,7 +36,7 @@ model.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=['a
 
 filepath = "./checkpoints/large_model_best.h5"
 checkpoint = ModelCheckpoint(filepath, monitor='val_acc', verbose=1, save_best_only=True, mode='max')
-tensorboard = TensorBoard(log_dir='./logs', histogram_freq=0, batch_size=128, write_graph=True,
+tensorboard = TensorBoard(log_dir='./logs', histogram_freq=0, batch_size=batch_size, write_graph=True,
                           write_grads=True, write_images=True, embeddings_freq=0,
                           embeddings_layer_names=None, embeddings_metadata=None, embeddings_data=None,
                           update_freq='batch')

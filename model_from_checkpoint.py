@@ -24,7 +24,7 @@ for layer in network_layers:
     model.add(layer)
 model.add(Dense(nb_classes, activation='softmax'))
 model.summary()
-model.load_weights("./checkpoints/large_model_epoch_22.h5")
+model.load_weights("./checkpoints/large_model_best.h5")
 
 model.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=['accuracy'])
 

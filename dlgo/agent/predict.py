@@ -34,13 +34,13 @@ class DeepLearningAgent(Agent):
         move_probs /= np.sum(move_probs)
 
         candidates = np.arange(num_moves)
-        ranked_move = np.random.choice(
+        ranked_moves = np.random.choice(
             candidates,
             num_moves,
             replace=False,
             p=move_probs
         )
-        for point_idx in ranked_move:
+        for point_idx in ranked_moves:
             point = self.encoder.decode_point_index(point_idx)
             is_valid_move = game_state.is_valid_move(Move.play(point))
             is_not_stupid_move = not is_point_an_eye(game_state.board, point, game_state.next_player)

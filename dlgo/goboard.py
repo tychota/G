@@ -4,7 +4,7 @@ from dlgo.gotypes import Player, Point
 from dlgo import zobrist
 
 
-class Move():
+class Move:
     def __init__(self, point: Point = None, is_pass=False, is_resign=False):
         assert (point is not None) ^ is_pass ^ is_resign
         self.point = point
@@ -25,7 +25,7 @@ class Move():
         return Move(is_resign=True)
 
 
-class GoString():
+class GoString:
     def __init__(self, color: Player, stones: Collection[Point], liberties: Collection[Point]):
         self.color = color
         self.stones = frozenset(stones)

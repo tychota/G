@@ -50,9 +50,8 @@ with tf.Session() as sess:
     set_gpu_memory_target(0.7)
     model.fit(x=X, y=y, epochs=epochs, batch_size=batch_size, validation_data=(X_test, y_test),
               callbacks=callbacks_list)
-
-evaluation = model.evaluate(x=X_test, y=y_test, batch_size=batch_size)
-print(evaluation)
+    evaluation = model.evaluate(x=X_test, y=y_test, batch_size=batch_size)
+    print(evaluation)
 
 deep_learning_bot = DeepLearningAgent(model, encoder)
 deep_learning_bot.serialize(h5py.File("./agents/deep_bot_2.h5"))
