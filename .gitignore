@@ -185,3 +185,5 @@ data/*.tar.gz
 data/*.tar
 data/*.npy
 /*.html
+
+*.sgf
