@@ -6,7 +6,6 @@ from keras.layers.core import Dense
 from dlgo.agent.predict import DeepLearningAgent
 from dlgo.data.parallel_processor import GoDataProcessor
 from dlgo.encoders.sevenplane import SevenPlaneEncoder
-from dlgo.encoders.simple import SimpleEncoder
 from dlgo.networks.large import layers
 from keras.callbacks import ModelCheckpoint, TensorBoard
 
